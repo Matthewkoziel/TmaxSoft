@@ -54,7 +54,7 @@ environment_setup(){
   #First we check if they entered a base name for a dataset
   #Then we check if they entered a name for the schema file
   #If not, the usage is displayed to them, and the program terminates
-  if [ "$base_name" == "SYS2.APA.FONTLIB" ]; then
+  if [ "$base_name" == "BLKLST.FONTLIB" ]; then
     echo "THE BASE NAME PROVIDED IS BLACKLISTED"
     echo "Adding --import-only option"
     import_only_opt=" --import-only"
@@ -181,8 +181,8 @@ usage(){
   echo "-b <base_name>    : (Required Field) - Specify the PS/GDG/PO BASE Name"
   echo "-s <schema_file>  : (Required Field) - Specify the Schema file"
   echo "-c <convcpy dir>  : (Required Field) - Specify the name of the convcpy directory"
-  echo "                  : Example: APP.CONTINGENCY or APP.DISCONNECT.NOTICES"
-  echo "                  : convcpy_loc is set to APP.DISCONNECT.NOTICES by default"
+  echo "                  : Example: APP.APPLICATION1 or APP.APPLICATION2.TEST"
+  echo "                  : convcpy_loc is set to APP.APPLICATION1 by default"
   echo "-D                : Enable debug mode: Pass a number 1-3"
   echo "-n                : RUN AS DRYMODE (Will not actually execute the dsmigins)"
   echo "-I                : enable --import-only mode (does not convert EBCDIC to ASCII"
