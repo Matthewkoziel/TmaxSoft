@@ -1,0 +1,15 @@
+In order to get the DB2_Access_Script.sh to run, you need to do a few prerequisites that I plan on implementing into the script, I just haven't had the time.
+First, you will need to create a directory structure like so:
+  DB2_Access_Script
+      Source
+      INSERTS
+      DB2_Access_Script.sh
+     
+     
+     
+Put the source code (Cobol programs) into the Source directory.
+Then run the script. It will create a copy of the source code in INSERTS with some cuts and other sed statements that help the parsing.
+The output is a file called Audit.log.sorted which can be pasted into Excel. The idea is to use the Text to columns feature in Excel
+To create an output that is legible. The order of the output file is as such:
+
+  PROGRAM : TABLE : SELECT : INSERT : UPDATE : DELETE
