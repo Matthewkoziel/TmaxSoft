@@ -1,0 +1,81 @@
+#!/bin/bash
+
+hostname=$(hostname)
+IP_Address=$(hostname -i | cut -d" " -f2)
+node_file="$JEUS_HOME/domains/nodes.xml"
+#Setting the j_domain_name to the default value (jeus_domain)
+#This value may need to be modified per environment.
+j_domain_name="jeus_domain"
+domain_file="$JEUS_HOME/domains/${j_domain_name}/config/domain.xml"
+log_dir="$OPENFRAME_HOME/log/scripts"
+DATE_=$(date +%Y%m%d)
+basename=$(basename $0)
+
+
+#SERVER NAMES (May vary from environment to environment)
+ofminer_svr_name="ofminer_svr"
+ofmanager_svr_name="ofmgr_svr"
+ofgw_svr_name="ofgw_svr"
+jeus_svr_name="DomainAdminServer"
+
+#APPLICATION NAMES (May vary from environment to environment)
+ofminer_app_name="ofminer"
+ofmanager_app_name="ofmanager"
+ofgw_app_name="webterminal"
+jeus_app_name="webadmmin"
+
+check_return_code(){
+  rc=$1
+  string_=$2
+
+  if [ "$rc" == 0 ];
+  then
+    echo "$string_ : SUCCESSFUL" >> ${log_dir}/${basename}.${DATE_}.out
+  else
+    echo "$string_ : FAILED" >> ${log_dir}/${basename}.${DATE_}.err
+    exit 100
+  fi
+}
+
+
+get_ip(){
+  echo "Server IP: ${IP_Address}"
+}
+
+get_jeus(){
+  jeus_port=$(cat $domain_file | grep -A30 "admin" | grep -A5 "BASE" | grep "listen-port" | cut -d">" -f2 | cut -d"<" -f1)
+  check_return_code $? "cat $domain_file for jeus_port"
+  echo "${jeus_svr_name}: ${IP_Address}:${jeus_port}/${jeus_app_name}"
+}
+
+get_ofmanager(){
+  ofmanager_port=$(cat $domain_file | grep -A20 "${ofmanager_svr_name}" | grep -A3 "http-server" | grep "listen-port" | cut -d">" -f2 | cut -d"<" -f1)
+  check_return_code $? "cat $domain_file for ofmanager_port"
+  echo "${ofmanager_svr_name}: ${IP_Address}:${ofmanager_port}/${ofmanager_app_name}"
+}
+
+get_ofminer(){
+  ofminer_port=$(cat $domain_file | grep -A20 "${ofminer_svr_name}" | grep -A3 "http-server" | grep "listen-port" | cut -d">" -f2 | cut -d"<" -f1)
+  check_return_code $? "cat $domain_file for ofminer_port"
+  echo "${ofminer_svr_name}: ${IP_Address}:${ofminer_port}/${ofminer_app_name}"
+}
+
+get_ofgw(){
+  ofgw_port=$(cat $domain_file | grep -A20 "${ofgw_svr_name}" | grep -A3 "http-server" | grep "listen-port" | cut -d">" -f2 | cut -d"<" -f1)
+  check_return_code $? "cat $domain_file for ofgw_port"
+  echo "${ofgw_svr_name}: ${IP_Address}:${ofgw_port}/${ofgw_app_name}"
+}
+
+
+main(){
+  echo ""
+  get_ip
+  get_jeus
+  get_ofmanager
+  get_ofminer
+  get_ofgw
+  echo ""
+}
+
+main
+exit 0
